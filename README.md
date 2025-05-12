@@ -7,6 +7,7 @@ outputs gpu allocation usage node by node.
 
 ### usage
 ```
+cd $HOME
 git clone https://github.com/vwhvpwvk/slurm-utility.git
 cd slurm-utility/
 bash set_alias_bashrc.sh inspect_gpu_usage_by_node.sh gpu-usage
