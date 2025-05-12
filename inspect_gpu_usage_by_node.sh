@@ -210,8 +210,8 @@ generate_usage_report() {
 #node_pattern="$1"
 PARTITIONS=$(sinfo -s | grep gpu | awk '{print $1}')
 
-echo "********************** GPU Usage Dashboard *********************"
-echo "**********************************************************************"
+echo "************************** GPU Usage Dashboard *************************"
+echo "************************************************************************"
 for PARTITION in $PARTITIONS; do
 	echo " ======================== ** $PARTITION USAGE ** ============================================="
 	TOT_AVAIL_NODES=$(sinfo -p $PARTITION|  awk '{print $6}')
