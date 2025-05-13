@@ -1,0 +1,10 @@
+# purpose: get a quick snapshot to get free gpu statistics, in csv format, or other formats.
+	- options: format (csv, stdout, tsv)
+
+# example output
+gres/gpu, in_use, free, total 
+v100, 2, 6, 8
+a100_1g.10gb, 33, 23, 56
+a100, 14, 10, 24
+l40s, 15, 33, 48
+

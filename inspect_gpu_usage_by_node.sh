@@ -5,6 +5,8 @@
 process_string_to_array() {
 
     local input_string="$1"
+    local -n extracted_nodes="$2" #nameref: define variable name to output array
+    local node_global_name=""
     
     # extract the first field to node_global_name global variable
     node_global_name=$(echo "$input_string" | cut -d'-' -f1)
@@ -18,7 +20,7 @@ process_string_to_array() {
     readarray -t extracted_nodes < <(
 
       for part in "${temp_parts[@]}"; do
-        process_item "$part"
+        process_item "$part" "$node_global_name"
       done
 
     )
@@ -27,6 +29,7 @@ process_string_to_array() {
 # process_item(): function to process a single item (number or range)
 process_item() {
     local item="$1"
+    local node_global_name="$2"
     item=$(echo "$item" | xargs)
 
     if [[ "$item" == *"-"* ]]; then
@@ -50,7 +53,7 @@ process_item() {
 
 parse_tres_string() {
     local tres_str="$1"
-    local -n resources_array="$2" # Use nameref
+    local -n resources_array="$2" #nameref: define variable name to output array
 
     # extract the part after the first '='
     local data_part=$(echo "$tres_str" | cut -d'=' -f2-)
@@ -219,7 +222,7 @@ for PARTITION in $PARTITIONS; do
 	
 	while read -r AVAIL_NODES NODE_STATE; do
 		if [[ $AVAIL_NODES == *[* ]]; then
-			process_string_to_array "$AVAIL_NODES"
+			process_string_to_array "$AVAIL_NODES" extracted_nodes 
 			for FOCAL_NODE in "${extracted_nodes[@]}"; do
 				#echo $FOCAL_NODE
 				TRES_CFG=$(scontrol show node $FOCAL_NODE | grep CfgTRES)	
