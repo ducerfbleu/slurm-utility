@@ -6,10 +6,10 @@ process_string_to_array() {
 
     local input_string="$1"
     local -n extracted_info="$2" #nameref: define variable name to output array
-    local node_global_name=""
+    local node_prefix=""
     
-    # extract the first field to node_global_name global variable
-    node_global_name=$(echo "$input_string" | cut -d'-' -f1)
+    # extract the first field to node_prefix to pass it onto process_item() function
+    node_prefix=$(echo "$input_string" | cut -d'-' -f1)
     # [grep] extract content within []; [sed] remove brackets
     local content=$(echo "$input_string" | grep -o '\[.*\]' | sed 's/[][]//g')
     
@@ -20,7 +20,7 @@ process_string_to_array() {
     readarray -t extracted_info < <(
 
       for part in "${temp_parts[@]}"; do
-        process_item "$part" "$node_global_name"
+        process_item "$part" "$node_prefix"
       done
 
     )
@@ -29,7 +29,7 @@ process_string_to_array() {
 # process_item(): function to process a single item (number or range)
 process_item() {
     local item="$1"
-    local node_global_name="$2"
+    local node_prefix="$2"
     item=$(echo "$item" | xargs)
 
     if [[ "$item" == *"-"* ]]; then
@@ -39,7 +39,7 @@ process_item() {
         local padding_width=${#start}
 
         seq -w "$start" "$end" | while read num; do
-            printf "$node_global_name-%0*d\n" "$padding_width" "$((10#$num))"
+            printf "$node_prefix-%0*d\n" "$padding_width" "$((10#$num))"
         done
 
     else
@@ -47,7 +47,7 @@ process_item() {
         local number="$item"
         local padding_width=${#number} # Get the original padding width
 
-        printf "$node_global_name-%0*d\n" "$padding_width" "$((10#$number))"
+        printf "$node_prefix-%0*d\n" "$padding_width" "$((10#$number))"
     fi
 }
 
