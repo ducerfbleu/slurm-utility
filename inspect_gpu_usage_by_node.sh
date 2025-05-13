@@ -5,7 +5,7 @@
 process_string_to_array() {
 
     local input_string="$1"
-    local -n extracted_nodes="$2" #nameref: define variable name to output array
+    local -n extracted_info="$2" #nameref: define variable name to output array
     local node_global_name=""
     
     # extract the first field to node_global_name global variable
@@ -16,8 +16,8 @@ process_string_to_array() {
     # set comma as IFS; read parts into a temporary array
     IFS=',' read -ra temp_parts <<< "$content"
     
-    # read though temp_parts array, then output to global variable "extracted_nodes" 
-    readarray -t extracted_nodes < <(
+    # read though temp_parts array, then output to nameref-defined variable name
+    readarray -t extracted_info < <(
 
       for part in "${temp_parts[@]}"; do
         process_item "$part" "$node_global_name"
